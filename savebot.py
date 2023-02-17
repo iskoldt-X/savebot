@@ -1,10 +1,14 @@
 import requests
 import telebot
 import datetime
+import os
 
-TARGET_CHAT_ID = myid
-bot = telebot.TeleBot(mytoken)
 
+
+TARGET_CHAT_ID = int(os.environ.get("TARGET_CHAT_ID"))
+MY_TOKEN = os.environ.get("MY_TOKEN")
+
+bot = telebot.TeleBot(MY_TOKEN)
 @bot.message_handler(func=lambda message: message.chat.id == TARGET_CHAT_ID, content_types=['text', 'photo', 'audio', 'document', 'sticker', 'video', 'video_note', 'voice', 'location', 'contact', 'poll', 'dice'])
 def echo_all(message):
     bot.reply_to(message, 'copy.')
@@ -19,7 +23,7 @@ def echo_all(message):
         with open('photo.jpg', 'wb') as new_file:
             new_file.write(downloaded_file)
             
-        afile = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(mytoken, file_info.file_path))
+        afile = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(MY_TOKEN, file_info.file_path))
         file_extension = '.' + file_info.file_path.split('.')[-1]
         with open('afile' + file_extension, 'wb') as f:
             f.write(afile.content)
