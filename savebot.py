@@ -26,7 +26,18 @@ def echo_all(message):
     filenamehead = str(messageid) + '.' + timerr
     content_type = message.content_type
     myfilepath = ''
-    someinfo = ''
+    
+    
+    if message.forward_from_chat:
+        someinfo = str(message.forward_from_chat)
+        if message.forward_from_messag_id:
+            someinfo = someinfo + '\n' + str(message.forward_from_messag_id)
+    elif message.forward_from:
+        someinfo = str(message.forward_from)
+    else:
+        someinfo = ''
+        
+    #if message.
     
     print(thechatid, timerr, content_type)
     print(message)
@@ -74,11 +85,14 @@ def echo_all(message):
             bot.reply_to(message, 'not supported yet')
         
         if message.caption:
-            someinfo = filenamehead + '\n' + message.caption + '\n' + myfilepath + '\n'
+            someinfo = filenamehead + '\n' + someinfo + '\n' + message.caption + '\n' + myfilepath + '\n'
         else:
-            someinfo = filenamehead + '\n' + myfilepath + '\n'
-         
+            someinfo = filenamehead + '\n' + someinfo + '\n' + myfilepath + '\n'
             
+        with open('messages/' + filenamehead + '.txt', 'w') as f:
+            f.write(someinfo)
+        
+         
             
     bot.reply_to(message, 'Roger that.')
     
