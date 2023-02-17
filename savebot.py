@@ -24,9 +24,9 @@ def echo_all(message):
     thechatid = message.chat.id
     messageid = message.message_id
     filenamehead = str(messageid) + '.' + timerr + '.'
+    content_type = message.content_type
     
-    
-    print(thechatid, timerr, messagetext)
+    print(thechatid, timerr, content_type)
     print(message)
     
     if message.text:
