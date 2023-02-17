@@ -26,6 +26,7 @@ def echo_all(message):
     filenamehead = str(messageid) + '.' + timerr
     content_type = message.content_type
     myfilepath = ''
+    someinfo = ''
     
     print(thechatid, timerr, content_type)
     print(message)
@@ -71,6 +72,13 @@ def echo_all(message):
         else:
             print('not supported yet')
             bot.reply_to(message, 'not supported yet')
+        
+        if message.caption:
+            someinfo = filenamehead + '\n' + message.caption + '\n' + myfilepath + '\n'
+        else:
+            someinfo = filenamehead + '\n' + myfilepath + '\n'
+         
+            
             
     bot.reply_to(message, 'Roger that.')
     
