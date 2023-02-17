@@ -30,8 +30,8 @@ def echo_all(message):
     
     if message.forward_from_chat:
         someinfo = str(message.forward_from_chat)
-        if message.forward_from_messag_id:
-            someinfo = someinfo + '\n' + str(message.forward_from_messag_id)
+        if message.forward_from_message_id:
+            someinfo = someinfo + '\n' + str(message.forward_from_message_id)
     elif message.forward_from:
         someinfo = str(message.forward_from)
     else:
