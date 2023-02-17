@@ -65,8 +65,11 @@ def echo_all(message):
         elif message.video:
             # If the message contains a video, download it
             file_id = message.video.file_id
-            file_info = bot.get_file(file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
+            #file_info = bot.get_file(file_id)
+            #downloaded_file = bot.download_file(file_info.file_path)
+            
+            downloaded_file = bot.download_file(bot.get_file(file_id).file_path)
+            
             myfilepath = 'videos/' + filenamehead + '.mp4'
             with open(myfilepath, 'wb') as new_file:
                 new_file.write(downloaded_file)
