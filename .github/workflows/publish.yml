@@ -38,4 +38,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/iskoldt-x/savebot/savebot:latest
+          tags: latest
