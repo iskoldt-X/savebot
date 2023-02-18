@@ -3,10 +3,22 @@ import requests
 import telebot
 import datetime
 import os
+import sys
 
 TARGET_CHAT_ID = int(os.environ.get("TARGET_CHAT_ID"))
 MY_TOKEN = os.environ.get("MY_TOKEN")
 MY_API = os.environ.get("MY_API")
+
+if TARGET_CHAT_ID == 'empty' and MY_TOKEN != 'empty':
+    #just give me the chat id.
+    bot = telebot.TeleBot(MY_TOKEN)
+    def just_chat_id(message):
+        timerr = datetime.datetime.fromtimestamp(message.date).strftime("%Y-%m-%d-%H.%M.%S")
+        thechatid = message.chat.id
+        bot.reply_to(message, 'Your CHAT_ID is: ' + str(thechatid))
+        print(thechatid, timerr)
+        sys.exit(0)
+    bot.infinity_polling()
 
 parent_dir = 'messages'
 
@@ -29,7 +41,6 @@ bot = telebot.TeleBot(MY_TOKEN)
 @bot.message_handler(func=lambda message: message.chat.id == TARGET_CHAT_ID, content_types=all_content)
 
 def echo_all(message):
-    
     timerr = datetime.datetime.fromtimestamp(message.date).strftime("%Y-%m-%d-%H.%M.%S")
     thechatid = message.chat.id
     messageid = message.message_id
