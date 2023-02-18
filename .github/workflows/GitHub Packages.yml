@@ -2,7 +2,7 @@ name: Push Docker to GitHub Packages
 
 on:
   push:
-    branches: ['release']
+    branches: ['main']
 
 env:
   REGISTRY: ghcr.io
