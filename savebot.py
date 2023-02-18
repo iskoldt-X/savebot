@@ -4,19 +4,26 @@ import telebot
 import datetime
 import os
 
-
 TARGET_CHAT_ID = int(os.environ.get("TARGET_CHAT_ID"))
 MY_TOKEN = os.environ.get("MY_TOKEN")
+MY_API = os.environ.get("MY_API")
 
+parent_dir = 'messages'
 
-all_content = ['text', 'photo', 'audio', 'document', 'sticker', 'video', 'video_note', 'voice', 'location', 'contact', 'poll', 'dice']
+all_content = ['text', 'photo',
+               'audio', 'document',
+               'sticker', 'video',
+               'video_note', 'voice',
+               'location', 'contact',
+               'poll', 'dice']
 
-        
+def create_fld(folder_name):
+    if not os.path.isdir(folder_name):
+        os.makedirs(folder_name)
+
+create_fld(parent_dir)
 for thefolder in all_content:
-    if not os.path.isdir(thefolder):
-        os.makedirs(thefolder)
-        print(thefolder, " do not exist! created it.")
-
+    create_fld(parent_dir + '/' + thefolder)
 
 bot = telebot.TeleBot(MY_TOKEN)
 @bot.message_handler(func=lambda message: message.chat.id == TARGET_CHAT_ID, content_types=all_content)
@@ -29,8 +36,9 @@ def echo_all(message):
     filenamehead = str(messageid) + '.' + timerr
     content_type = message.content_type
     myfilepath = ''
+    moreinfo = ''
     
-    
+    #message forward or not
     if message.forward_from_chat:
         someinfo = str(message.forward_from_chat)
         if message.forward_from_message_id:
@@ -45,16 +53,19 @@ def echo_all(message):
     
     if message.text:
         messagetext = message.text
-        with open('text/' + filenamehead + '.txt', 'w') as f:
+        with open(parent_dir + '/text/' + filenamehead + '-' + messagetext[:20] + '.txt', 'w') as f:
             f.write(messagetext + '\n')
     else:
         if content_type in all_content:
-            print('yess')
             content = getattr(message, content_type)
             if content:
-                known_type = True
                 print(content, type(content))
-                file_id = content[-1].file_id
+                if isinstance(content, telebot.types.Audio):
+                    file_id = content.file_id
+                elif isinstance(content, telebot.types.VideoNote):
+                    file_id = content.thumb.file_id
+                else:
+                    file_id = content[-1].file_id
                 file_info = bot.get_file(file_id)
                 downloaded_file = bot.download_file(file_info.file_path)
                 extension = ''
@@ -66,24 +77,29 @@ def echo_all(message):
                     if message.document.file_name:
                         extension = message.document.file_name
                 
-                myfilepath = content_type + '/' + filenamehead + extension
+                #message have caption or not
+                if message.caption:
+                    moreinfo = message.caption
+                    someinfo = filenamehead + '\n' + someinfo + '\n' + moreinfo + '\n' + myfilepath + '\n'
+                else:
+                    someinfo = filenamehead + '\n' + someinfo + '\n' + myfilepath + '\n'
+
+                if moreinfo != '':
+                    moreinfo = '-' + moreinfo[:20]
+                myfilepath = parent_dir + '/' + content_type + '/' + filenamehead + moreinfo + extension
+
+                #save the file
                 with open(myfilepath, 'wb') as new_file:
                     new_file.write(downloaded_file)
-           
+
+                #creata a text file to record the existing of the non-text file
+                with open(parent_dir + '/text/' + filenamehead + '.' + content_type + moreinfo + '.txt', 'w') as f:
+                    f.write(someinfo)
+
         else:
             print('not supported yet')
             bot.reply_to(message, 'not supported yet')
-        
-        if message.caption:
-            someinfo = filenamehead + '\n' + someinfo + '\n' + message.caption + '\n' + myfilepath + '\n'
-        else:
-            someinfo = filenamehead + '\n' + someinfo + '\n' + myfilepath + '\n'
-            
-        with open('text/' + filenamehead + '.txt', 'w') as f:
-            f.write(someinfo)
-        
-         
-            
+             
     bot.reply_to(message, 'Roger that.')
     
 bot.infinity_polling()
