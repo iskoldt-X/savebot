@@ -10,4 +10,5 @@ RUN apt update \
 WORKDIR /savebot
 ENV TARGET_CHAT_ID empty
 ENV MY_TOKEN empty
+ENV MY_API empty
 CMD ./savebot.py
