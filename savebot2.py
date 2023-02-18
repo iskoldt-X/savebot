@@ -8,13 +8,9 @@ import os
 TARGET_CHAT_ID = int(os.environ.get("TARGET_CHAT_ID"))
 MY_TOKEN = os.environ.get("MY_TOKEN")
 
-folderlist = ['messages', 'photos', 'videos', 'documents', 'others']
+
 all_content = ['text', 'photo', 'audio', 'document', 'sticker', 'video', 'video_note', 'voice', 'location', 'contact', 'poll', 'dice']
 
-for thefolder in folderlist:
-    if not os.path.isdir(thefolder):
-        os.makedirs(thefolder)
-        print(thefolder, " do not exist! created it.")
         
 for thefolder in all_content:
     if not os.path.isdir(thefolder):
@@ -49,29 +45,33 @@ def echo_all(message):
     
     if message.text:
         messagetext = message.text
-        with open('messages/' + filenamehead + '.txt', 'w') as f:
+        with open('text/' + filenamehead + '.txt', 'w') as f:
             f.write(messagetext + '\n')
     else:
+        known_type = False
         for thetype in all_content:
             if hasattr(message, thetype):
-              content = getattr(message, thetype)
-              file_id = content[-1].file_id
-              file_info = bot.get_file(file_id)
-              downloaded_file = bot.download_file(file_info.file_path)
-              extension = ''
-              if message.content_type == 'photo':
-                extension = '.jpg'
-              elif message.content_type == 'video':
-                extension = '.mp4'
-              elif message.content_type == 'document':
-                if message.document.file_name:
-                  extension = message.document.file_name
+                content = getattr(message, thetype)
+                if content:
+                    known_type = True
+                    print(content, type(content))
+                    file_id = content[-1].file_id
+                    file_info = bot.get_file(file_id)
+                    downloaded_file = bot.download_file(file_info.file_path)
+                    extension = ''
+                    if message.content_type == 'photo':
+                        extension = '.jpg'
+                    elif message.content_type == 'video':
+                        extension = '.mp4'
+                    elif message.content_type == 'document':
+                        if message.document.file_name:
+                            extension = message.document.file_name
                 
-              myfilepath = thetype + '/' + filenamehead + extension
-                with open(myfilepath, 'wb') as new_file:
-                new_file.write(downloaded_file)
+                    myfilepath = thetype + '/' + filenamehead + extension
+                    with open(myfilepath, 'wb') as new_file:
+                        new_file.write(downloaded_file)
            
-        else:
+        if not known_type:
             print('not supported yet')
             bot.reply_to(message, 'not supported yet')
         
@@ -80,7 +80,7 @@ def echo_all(message):
         else:
             someinfo = filenamehead + '\n' + someinfo + '\n' + myfilepath + '\n'
             
-        with open('messages/' + filenamehead + '.txt', 'w') as f:
+        with open('text/' + filenamehead + '.txt', 'w') as f:
             f.write(someinfo)
         
          
