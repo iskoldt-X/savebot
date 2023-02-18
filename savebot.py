@@ -3,11 +3,17 @@ import requests
 import telebot
 import datetime
 import os
-import sys
 
 TARGET_CHAT_ID = os.environ.get("TARGET_CHAT_ID")
 MY_TOKEN = os.environ.get("MY_TOKEN")
 MY_API = os.environ.get("MY_API")
+
+all_content = ['text', 'photo',
+               'audio', 'document',
+               'sticker', 'video',
+               'video_note', 'voice',
+               'location', 'contact',
+               'poll', 'dice']
 
 if TARGET_CHAT_ID != 'empty':
     TARGET_CHAT_ID = int(TARGET_CHAT_ID)
@@ -23,17 +29,12 @@ if TARGET_CHAT_ID == 'empty':
         thechatid = message.chat.id
         bot.reply_to(message, 'Your CHAT_ID is: ' + str(thechatid))
         print(thechatid, timerr)
-        sys.exit(0)
+        bot.stop_polling()
+        os._exit(0)
     bot.infinity_polling()
 
 parent_dir = 'messages'
 
-all_content = ['text', 'photo',
-               'audio', 'document',
-               'sticker', 'video',
-               'video_note', 'voice',
-               'location', 'contact',
-               'poll', 'dice']
 
 def create_fld(folder_name):
     if not os.path.isdir(folder_name):
