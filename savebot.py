@@ -8,15 +8,18 @@ import os
 TARGET_CHAT_ID = int(os.environ.get("TARGET_CHAT_ID"))
 MY_TOKEN = os.environ.get("MY_TOKEN")
 
-folderlist = ['messages', 'photos', 'videos', 'documents', 'others']
 
-for thefolder in folderlist:
+all_content = ['text', 'photo', 'audio', 'document', 'sticker', 'video', 'video_note', 'voice', 'location', 'contact', 'poll', 'dice']
+
+        
+for thefolder in all_content:
     if not os.path.isdir(thefolder):
         os.makedirs(thefolder)
         print(thefolder, " do not exist! created it.")
 
+
 bot = telebot.TeleBot(MY_TOKEN)
-@bot.message_handler(func=lambda message: message.chat.id == TARGET_CHAT_ID, content_types=['text', 'photo', 'audio', 'document', 'sticker', 'video', 'video_note', 'voice', 'location', 'contact', 'poll', 'dice'])
+@bot.message_handler(func=lambda message: message.chat.id == TARGET_CHAT_ID, content_types=all_content)
 
 def echo_all(message):
     
@@ -36,53 +39,37 @@ def echo_all(message):
         someinfo = str(message.forward_from)
     else:
         someinfo = ''
-        
-    #if message.
     
     print(thechatid, timerr, content_type)
     print(message)
     
     if message.text:
         messagetext = message.text
-        with open('messages/' + filenamehead + '.txt', 'w') as f:
+        with open('text/' + filenamehead + '.txt', 'w') as f:
             f.write(messagetext + '\n')
     else:
-        if message.photo:
-        # If the message contains a photo, download it
-            file_id = message.photo[-1].file_id
-            file_info = bot.get_file(file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            myfilepath = 'photos/' + filenamehead + '.jpg'
-            
-            with open(myfilepath, 'wb') as new_file:
-                new_file.write(downloaded_file)
-            
-            #afile = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(MY_TOKEN, file_info.file_path))
-            #file_extension = '.' + file_info.file_path.split('.')[-1]
-            #with open('afile' + file_extension, 'wb') as f:
-            #    f.write(afile.content)
-        
-        elif message.video:
-            # If the message contains a video, download it
-            file_id = message.video.file_id
-            #file_info = bot.get_file(file_id)
-            #downloaded_file = bot.download_file(file_info.file_path)
-            
-            downloaded_file = bot.download_file(bot.get_file(file_id).file_path)
-            
-            myfilepath = 'videos/' + filenamehead + '.mp4'
-            with open(myfilepath, 'wb') as new_file:
-                new_file.write(downloaded_file)
-
-        elif message.document:
-            # If the message contains a document, download it
-            file_id = message.document.file_id
-            file_info = bot.get_file(file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            myfilepath = 'documents/' + message.document.file_name
-            
-            with open(myfilepath, 'wb') as new_file:
-                new_file.write(downloaded_file)
+        if content_type in all_content:
+            print('yess')
+            content = getattr(message, content_type)
+            if content:
+                known_type = True
+                print(content, type(content))
+                file_id = content[-1].file_id
+                file_info = bot.get_file(file_id)
+                downloaded_file = bot.download_file(file_info.file_path)
+                extension = ''
+                if content_type == 'photo':
+                    extension = '.jpg'
+                elif content_type == 'video':
+                    extension = '.mp4'
+                elif content_type == 'document':
+                    if message.document.file_name:
+                        extension = message.document.file_name
+                
+                myfilepath = content_type + '/' + filenamehead + extension
+                with open(myfilepath, 'wb') as new_file:
+                    new_file.write(downloaded_file)
+           
         else:
             print('not supported yet')
             bot.reply_to(message, 'not supported yet')
@@ -92,7 +79,7 @@ def echo_all(message):
         else:
             someinfo = filenamehead + '\n' + someinfo + '\n' + myfilepath + '\n'
             
-        with open('messages/' + filenamehead + '.txt', 'w') as f:
+        with open('text/' + filenamehead + '.txt', 'w') as f:
             f.write(someinfo)
         
          
