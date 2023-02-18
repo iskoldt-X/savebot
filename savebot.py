@@ -1,13 +1,21 @@
 #!/usr/bin/python3
-import requests
-import telebot
+
+# Import the required libraries
+from pyrogram import Client
 import datetime
+import telebot
 import os
 
-TARGET_CHAT_ID = os.environ.get("TARGET_CHAT_ID")
-MY_TOKEN = os.environ.get("MY_TOKEN")
-MY_API = os.environ.get("MY_API")
+def create_fld(folder_name):
+    if not os.path.isdir(folder_name):
+        os.makedirs(folder_name)
 
+#by default, we will only use
+#telebot, Pyrogram requires
+#more api than telebot.
+pyrogram_flag = False
+
+parent_dir = 'messages'
 all_content = ['text', 'photo',
                'audio', 'document',
                'sticker', 'video',
@@ -15,38 +23,55 @@ all_content = ['text', 'photo',
                'location', 'contact',
                'poll', 'dice']
 
+MY_TOKEN = os.environ.get("MY_TOKEN")
+MY_API_ID = os.environ.get("MY_API_ID")
+MY_API_HASH = os.environ.get("MY_API_HASH")
+TARGET_CHAT_ID = os.environ.get("TARGET_CHAT_ID")
+
+bot = telebot.TeleBot(MY_TOKEN)
+
+#if the TARGET_CHAT_ID is empty,
+# that means this run only needs
+# to reply the chat id for the user
 if TARGET_CHAT_ID != 'empty':
     TARGET_CHAT_ID = int(TARGET_CHAT_ID)
-
-if TARGET_CHAT_ID == 'empty':
+else:
     print('Oh no. Now I need to send you your Chat ID.')
-    
     #just give me the chat id.
-    bot = telebot.TeleBot(MY_TOKEN)
     @bot.message_handler(content_types=all_content)
     def just_chat_id(message):
-        timerr = datetime.datetime.fromtimestamp(message.date).strftime("%Y-%m-%d-%H.%M.%S")
-        thechatid = message.chat.id
-        bot.reply_to(message, 'Your CHAT_ID is: ' + str(thechatid))
-        print(thechatid, timerr)
+        bot.reply_to(message, 'Your CHAT_ID is: ' + str(message.chat.id))
         bot.stop_polling()
         os._exit(0)
     bot.infinity_polling()
 
-parent_dir = 'messages'
+#if MY_API_ID is not 'empty',
+#that means the user wants to
+#use pyrogram as well
+if MY_API_ID != 'empty':
+    pyrogram_flag = True
+    # Create a Pyrogram client
+    client = Client('my_session', MY_API_ID, MY_API_HASH, bot_token=MY_TOKEN)
 
+    # Define a function to download a file
+    #download_file(123132131, 123)
+    def download_file(chat_id, message_id, filepath_):
+        # Use the Pyrogram client to download the file
+        with client:
+            message = client.get_messages(chat_id, message_id, filepath_)
+            if message.document:
+                message.download(file_name=message.document.file_name)
+            else:
+                message.download()
 
-def create_fld(folder_name):
-    if not os.path.isdir(folder_name):
-        os.makedirs(folder_name)
-
+# Now we are talking!
+# Just create those dirs
 create_fld(parent_dir)
 for thefolder in all_content:
     create_fld(parent_dir + '/' + thefolder)
 
-bot = telebot.TeleBot(MY_TOKEN)
+# Our bot is here! let's go!
 @bot.message_handler(func=lambda message: message.chat.id == TARGET_CHAT_ID, content_types=all_content)
-
 def echo_all(message):
     timerr = datetime.datetime.fromtimestamp(message.date).strftime("%Y-%m-%d-%H.%M.%S")
     thechatid = message.chat.id
@@ -67,7 +92,7 @@ def echo_all(message):
         someinfo = ''
     
     print(thechatid, timerr, content_type)
-    print(message)
+    #print(message)
     
     if message.text:
         messagetext = message.text
@@ -80,10 +105,17 @@ def echo_all(message):
                 print(content, type(content))
                 if isinstance(content, telebot.types.Audio):
                     file_id = content.file_id
+                    file_size = content.file_size
                 elif isinstance(content, telebot.types.VideoNote):
-                    file_id = content.thumb.file_id
+                    file_id = content.file_id
+                    file_size = content.file_size
+                elif isinstance(content, telebot.types.Video):
+                    file_id = content.file_id
+                    file_size = content.file_size
                 else:
                     file_id = content[-1].file_id
+                    file_size = content[-1].file_size
+                print(file_size)
                 file_info = bot.get_file(file_id)
                 downloaded_file = bot.download_file(file_info.file_path)
                 extension = ''
