@@ -2,6 +2,7 @@ FROM ubuntu:20.04
 MAINTAINER iskoldt
 RUN apt update \
 	&& apt -y install python3-pip git \
+	&& pip3 install TgCrypto \
 	&& pip3 install pyrogram \
 	&& pip3 install telebot \
 	&& git clone https://github.com/iskoldt-X/savebot.git \
