@@ -24,4 +24,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: docker.pkg.github.com/iskoldt-X/savebot/savebot:latest
+          tags: docker.pkg.github.com/iskoldt-x/savebot/savebot:latest
