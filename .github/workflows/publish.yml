@@ -24,4 +24,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: docker.pkg.github.com/<OWNER>/<REPOSITORY>/<IMAGE_NAME>:<IMAGE_TAG>
+          tags: docker.pkg.github.com/iskoldt-X/savebot/savebot:latest
