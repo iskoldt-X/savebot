@@ -12,9 +12,12 @@ MY_API = os.environ.get("MY_API")
 if TARGET_CHAT_ID != 'empty':
     TARGET_CHAT_ID = int(TARGET_CHAT_ID)
 
-if TARGET_CHAT_ID == 'empty' and MY_TOKEN != 'empty':
+if TARGET_CHAT_ID == 'empty':
+    print('Oh no. Now I need to send you your Chat ID.')
+    
     #just give me the chat id.
     bot = telebot.TeleBot(MY_TOKEN)
+    @bot.message_handler(content_types=all_content)
     def just_chat_id(message):
         timerr = datetime.datetime.fromtimestamp(message.date).strftime("%Y-%m-%d-%H.%M.%S")
         thechatid = message.chat.id
