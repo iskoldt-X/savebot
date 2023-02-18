@@ -5,9 +5,12 @@ import datetime
 import os
 import sys
 
-TARGET_CHAT_ID = int(os.environ.get("TARGET_CHAT_ID"))
+TARGET_CHAT_ID = os.environ.get("TARGET_CHAT_ID")
 MY_TOKEN = os.environ.get("MY_TOKEN")
 MY_API = os.environ.get("MY_API")
+
+if TARGET_CHAT_ID != 'empty':
+    TARGET_CHAT_ID = int(TARGET_CHAT_ID)
 
 if TARGET_CHAT_ID == 'empty' and MY_TOKEN != 'empty':
     #just give me the chat id.
