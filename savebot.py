@@ -116,8 +116,10 @@ def echo_all(message):
                     file_id = content[-1].file_id
                     file_size = content[-1].file_size
                 print(file_size)
-                file_info = bot.get_file(file_id)
-                downloaded_file = bot.download_file(file_info.file_path)
+
+                if file_size < 20000000:
+                    file_info = bot.get_file(file_id)
+                    downloaded_file = bot.download_file(file_info.file_path)
                 extension = ''
                 if content_type == 'photo':
                     extension = '.jpg'
@@ -139,8 +141,13 @@ def echo_all(message):
                 myfilepath = parent_dir + '/' + content_type + '/' + filenamehead + moreinfo + extension
 
                 #save the file
-                with open(myfilepath, 'wb') as new_file:
-                    new_file.write(downloaded_file)
+                if file_size < 20000000:
+                    with open(myfilepath, 'wb') as new_file:
+                        new_file.write(downloaded_file)
+                else:
+                    if pyrogram_flag:
+                        download_file(TARGET_CHAT_ID, messageid, myfilepath)
+
 
                 #creata a text file to record the existing of the non-text file
                 with open(parent_dir + '/text/' + filenamehead + '.' + content_type + moreinfo + '.txt', 'w') as f:
