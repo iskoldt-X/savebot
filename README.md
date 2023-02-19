@@ -1,4 +1,6 @@
-# savebot
+**English** | [中文](https://icecoland.com/2023/02/19/savebot/)
+
+# Savebot
 Text, photos, videos... Save everything you throw to the telegram bot!
 
 <img src="https://img.shields.io/github/license/iskoldt-X/savebot.svg"/> <img src="https://img.shields.io/docker/pulls/iskoldt/savebot.svg"/>
