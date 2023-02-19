@@ -3,6 +3,14 @@ Text, photos, videos... Save everything you throw to the telegram bot!
 
 <img src="https://img.shields.io/github/license/iskoldt-X/savebot.svg"/> <img src="https://img.shields.io/docker/pulls/iskoldt/savebot.svg"/>
 
+## Features
+
+* Supported platforms: `amd64`, `arm64`.
+* Save text messages into txt files with message id and the time as label.
+* Save Photos and Videos into corresponding folders, and the caption into txt files.
+* Nailed files larger than 20MB by using [MTProto API](https://docs.pyrogram.org/topics/mtproto-vs-botapi#advantages-of-the-mtproto-api).
+
+
 ## Requirements
 
 We need at least a telegram Bot and a Python3 environment to run this project.
@@ -80,4 +88,14 @@ export TARGET_CHAT_ID=<your TARGET_CHAT_ID>
 python3 savebot.py
 ```
 
+## Acknowledgments
 
+We are grateful to Telethon and Pyrogram for providing such great APIs that enable us to create telegram bots like this one.
+
+## Statement
+
+Savebot is just a tool for locally saving your Telegram content. If you decide to save the content to public cloud storage, please make sure that you comply with the relevant laws and regulations on privacy and data protection.
+
+## License
+
+This project is licensed under the terms of the MIT license.
