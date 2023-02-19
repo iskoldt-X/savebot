@@ -1,12 +1,10 @@
-FROM ubuntu:20.04
+FROM python:3.9-slim-buster
 MAINTAINER iskoldt
-RUN apt update \
-    && apt -y install python3-pip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential && apt-get clean
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . /savebot
 WORKDIR /savebot
-RUN pip3 install --no-cache-dir -r requirements.txt
 ENV MY_TOKEN empty
 ENV MY_API_ID empty
 ENV MY_API_HASH empty
