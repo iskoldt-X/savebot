@@ -5,6 +5,8 @@ Text, photos, videos... Save everything you throw to the telegram bot!
 
 <img src="https://img.shields.io/github/license/iskoldt-X/savebot.svg"/> <img src="https://img.shields.io/docker/pulls/iskoldt/savebot.svg"/>
 
+![iphone13pro](https://user-images.githubusercontent.com/99703980/220041852-02a39783-4851-49a1-a1ab-f7dcf1fb8fc5.png)
+
 ## Features
 
 * Supported platforms: `amd64`, `arm64`.
