@@ -1,5 +1,4 @@
-name: Push to GitHub Packages test
-
+name: Push to GitHub Packages
 on:
   push:
     branches: ['main']
