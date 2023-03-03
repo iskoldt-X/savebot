@@ -23,10 +23,10 @@ all_content = ['text', 'photo',
                'location', 'contact',
                'poll', 'dice']
 
-MY_TOKEN = os.environ.get("MY_TOKEN")
-MY_API_ID = os.environ.get("MY_API_ID")
-MY_API_HASH = os.environ.get("MY_API_HASH")
-TARGET_CHAT_ID = os.environ.get("TARGET_CHAT_ID")
+MY_TOKEN = os.environ.get('MY_TOKEN')
+MY_API_ID = os.environ.get('MY_API_ID')
+MY_API_HASH = os.environ.get('MY_API_HASH')
+TARGET_CHAT_ID = os.environ.get('TARGET_CHAT_ID')
 
 bot = telebot.TeleBot(MY_TOKEN)
 
@@ -73,7 +73,7 @@ for thefolder in all_content:
 # Our bot is here! let's go!
 @bot.message_handler(func=lambda message: message.chat.id == TARGET_CHAT_ID, content_types=all_content)
 def echo_all(message):
-    timerr = datetime.datetime.fromtimestamp(message.date).strftime("%Y-%m-%d-%H.%M.%S")
+    timerr = datetime.datetime.fromtimestamp(message.date).strftime('%Y-%m-%d-%H.%M.%S')
     thechatid = message.chat.id
     messageid = message.message_id
     filenamehead = str(messageid) + '.' + timerr
