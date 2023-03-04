@@ -36,7 +36,7 @@ bot = telebot.TeleBot(MY_TOKEN)
 if TARGET_CHAT_ID != 'empty':
     TARGET_CHAT_ID = int(TARGET_CHAT_ID)
 else:
-    print('Oh no. Now I need to send you your Chat ID.')
+    print('Oh no. Now I need to send you your Chat ID.', flush=True)
     #just give me the chat id.
     @bot.message_handler(content_types=all_content)
     def just_chat_id(message):
@@ -91,8 +91,7 @@ def echo_all(message):
     else:
         someinfo = ''
     
-    print(thechatid, timerr, content_type)
-    #print(message)
+    print(thechatid, timerr, content_type, flush=True)
     
     if message.text:
         messagetext = message.text
@@ -102,7 +101,7 @@ def echo_all(message):
         if content_type in all_content:
             content = getattr(message, content_type)
             if content:
-                print(content, type(content))
+                print(content, type(content), flush=True)
                 if isinstance(content, telebot.types.Audio):
                     file_id = content.file_id
                     file_size = content.file_size
@@ -115,7 +114,7 @@ def echo_all(message):
                 else:
                     file_id = content[-1].file_id
                     file_size = content[-1].file_size
-                print(file_size)
+                print(file_size, flush=True)
 
                 if file_size < 20000000:
                     file_info = bot.get_file(file_id)
@@ -154,7 +153,7 @@ def echo_all(message):
                     f.write(someinfo)
 
         else:
-            print('not supported yet')
+            print('not supported yet', flush=True)
             bot.reply_to(message, 'not supported yet')
              
     bot.reply_to(message, 'Roger that.')
